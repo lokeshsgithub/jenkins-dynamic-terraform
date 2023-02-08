@@ -23,7 +23,7 @@
       shell: /bin/bash
       comment: "Nexus management account"
       expires: -1
-      password: "{{ 'nexus' | password_hash('sha512,A512') }}"
+      password: "{{ 'nexus' | password_hash('sha512','A512') }}"
    - name: setup sudo access for nexus user
      copy:
       dest: /etc/sudoers.d/nexus
