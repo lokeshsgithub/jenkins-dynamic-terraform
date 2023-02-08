@@ -8,7 +8,7 @@ resource "aws_instance" "AWSINSTANCE" {
   key_name = "lokeshsoftwaresolutions"
   security_groups = ["launch-wizard-7"]
   tags = {
-  Name = "lokeshtomcat"
+  Name = "lokeshnexus"
   }
 }
  
