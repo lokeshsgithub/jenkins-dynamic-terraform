@@ -7,15 +7,15 @@
       state: present
    - name: Get the url
      get_url:
-      url: https://download.sonatype.com/nexus/3/nexus-3.45.1-01-unix.tar.gz
+      url: https://download.sonatype.com/nexus/3/nexus-3.46.0-01-unix.tar.gz
       dest: /opt
    - name: unarchive the nexus server
      unarchive:
-      src: /opt/nexus-3.45.1-01-unix.tar.gz
+      src: /opt/nexus-3.46.0-01-unix.tar.gz
       dest: /opt
    - name: rename the nexus directory
      shell:
-       mv /opt/nexus-3.45.1-01 /opt/nexus
+       mv /opt/nexus-3.46.0-01 /opt/nexus
    - name: create nexus User 
      user:
       name: nexus
