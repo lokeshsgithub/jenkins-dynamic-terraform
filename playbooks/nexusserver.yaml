@@ -1,0 +1,69 @@
+- host: all
+  become: true
+  tasks:
+   - name: Install Java packages
+     yum:
+      name: java-1.8.0-openjdk-devel
+      state: present
+   - name: Get the url
+     get_url:
+      url: https://download.sonatype.com/nexus/3/nexus-3.45.1-01-unix.tar.gz
+      dest: /opt
+   - name: unarchive the nexus server
+     unarchive:
+      src: /opt/nexus-3.45.1-01-unix.tar.gz
+      dest: /opt
+   - name: rename the nexus directory
+     shell:
+      - mv /opt/nexus-3.45.1-01 /opt/nexus
+   - name: create nexus User 
+     user:
+      name: nexus
+      create_home: true
+      shell: /bin/bash
+      comment: "Nexus management account"
+      expires: -1
+      password: "{{ 'nexus' | password_hash('sha512,A512') }}"
+   - name: setup sudo access for nexus user
+     copy:
+      dest: /etc/sudoers.d/nexus
+      content: 'nexus ALL=(ALL) NOPASSWD: ALL'
+      validate: /usr/sbin/visudo -cf %s
+   - name: changethe owner and group permissions
+     file:
+      path: /opt/nexus
+      owner: nexus
+      group: nexus
+      mode: 0755
+      recurse: yes
+      state: directory
+   - name: change the ownership permissions to /opt/sonatype-work
+     file:
+      path: /opt/sonatype-work
+      owner: nexus
+      group: nexus
+      mode: 0755
+      recurse: yes
+      state: directory
+   - name: set the run_as_user parameter in nexus.rc
+     lineinfile:
+      dest: /opt/nexus/bin/nexus.rc
+      regexp: "#run_as_user="
+      line: "run_as_user=nexus"
+      backrefs: true
+   - name: create soft link for nexus
+     file:
+      src: /opt/nexus/bin/nexus
+      dest: /etc/init.d/nexus
+      state: link
+   - name: start the nexus service
+     systemd:
+      name: nexus
+      state: started
+      daemon_reloaded: yes
+      enabled: yes
+
+...
+
+
+    
