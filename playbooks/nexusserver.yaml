@@ -60,7 +60,7 @@
      systemd:
       name: nexus
       state: started
-      daemon_reloaded: yes
+      daemon_reload: yes
       enabled: yes
 
 ...
